@@ -1,0 +1,293 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Massively by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="fade-in">
+
+				<!-- Intro -->
+					<div id="intro">
+						<h1>Hubei  GDP<br/> Map</h1>
+						<p>Per  Capita  GDP(RMB)  of  Each  City  in  Hubei  Province  (2024)</p>
+						<p>Designed  by <a href="https://echarts.js.cn/zh/index.html">Echarts</a></p>
+						<ul class="actions">
+							<li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
+						</ul>
+					</div>
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">Massively</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li class="active"><a href="index.html">Hubei GDP Map</a></li>
+							<li><a href="generic.html">Industrial structure</a></li>
+							<li><a href="elements.html">Elements Reference</a></li>
+						</ul>
+<!-- 删除白框内的所有内容 -->
+</nav>
+
+<!-- Main --> 
+ 
+<style>
+    #main {
+        position: relative; /* 为伪元素提供定位参考 */
+        height: 90vh; /* 保持合适的高度，可根据实际调整 */
+    }
+
+    #main::before {
+        content: ""; /* 伪元素必须有 content 属性 */
+        position: absolute; /* 绝对定位，覆盖整个 main 元素 */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('images/cyber_background.png'); /* 替换为实际的图片路径 */
+        background-size: cover;
+        background-position: center;
+        opacity: 0.3; /* 调整透明度，范围从 0 到 1，0 为完全透明，1 为完全不透明 */
+        z-index: -1; /* 确保伪元素在 main 元素内容的下方 */
+    }
+</style>
+
+<div id="main">
+	<div id="main-content" style="height: 90vh">
+		<div id="container" style="height: 100%"></div>
+	  
+		<script type="text/javascript" src="assets/js/jquery-3.7.1.js"></script>
+		<script type="text/javascript" src="assets/js/echarts.js"></script>
+	  
+		<script type="text/javascript">
+		  var dom = document.getElementById('container');
+		  var myChart = echarts.init(dom, null, {
+			renderer: 'canvas',
+			useDirtyRect: false
+		  });
+		  var app = {};
+		  var option;
+	  
+		  myChart.showLoading();
+		  $.get('/data/420000.json', function (hubeiGeoJson) {
+		  myChart.hideLoading();
+		  // 注册湖北省地图
+		  echarts.registerMap('hubei', hubeiGeoJson);
+		  // ... 其他代码 ...
+		  var data = [
+		  { name: '宜昌', value: 140375 },  // 2022年数据，全省第一:cite[1]:cite[2]:cite[4]
+		  { name: '武汉', value: 137772 },  // 2022年数据，总量第一但人均第二:cite[1]:cite[3]
+		  { name: '鄂州', value: 118133 },  // 2022年数据，武汉都市圈核心城市:cite[1]:cite[6]
+		  { name: '襄阳', value: 111000 },  // 2022年数据，汽车产业基地:cite[1]:cite[3]
+		  { name: '潜江', value: 104842 },  // 2022年数据，省直管县级市:cite[1]:cite[6]
+		  { name: '仙桃', value: 91641 },   // 2022年数据，高新技术产业助推:cite[1]:cite[6]
+		  { name: '荆门', value: 89492 },   // 2022年数据，特色产业如蚕丝加工:cite[1]:cite[4]
+		  { name: '黄石', value: 83532 },   // 2022年数据，老工业基地:cite[1]
+		  { name: '十堰', value: 72882 },   // 2022年数据，汽车产业转型中:cite[1]
+		  { name: '咸宁', value: 71732 },   // 2022年数据，农业与旅游并重:cite[1]:cite[6]
+		  { name: '孝感', value: 66299 },   // 2022年数据，十年增速前三:cite[8]
+		  { name: '天门', value: 65972 },   // 2022年数据，省直管县级市:cite[1]
+		  { name: '随州', value: 65956 },   // 2022年数据，特色农产品产业:cite[1]
+		  { name: '荆州', value: 58577 },   // 2022年数据，人口大市转型中:cite[1]:cite[5]
+		  { name: '神农架', value: 56617 }, // 2022年数据，生态旅游主导:cite[1]
+		  { name: '黄冈', value: 47458 },   // 2022年数据，人口基数大制约人均:cite[1]:cite[4]
+		  { name: '恩施', value: 41248 }    // 2022年数据，山区经济待发展:cite[1]:cite[5]
+	  ];
+		  data.sort(function (a, b) {
+			  return a.value - b.value;
+		  });
+		  const mapOption = {
+		  visualMap: {
+			left: 'right',
+			min: 20000,
+			max: 170000,
+			inRange: {
+			  // prettier-ignore
+			  color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+			},
+			text: ['High', 'Low'],
+			calculable: true
+		  },
+		  title: [{
+      text: 'Per Capita GDP(RMB) of Each City in Hubei Province (2024)',
+      subtext: 'Data from www.hubei.gov.cn',
+      sublink: 'https://www.hubei.gov.cn',
+      left: 'right'
+    },
+    {
+        text: 'Click to toggle the heatmap/histogram.', // 这里替换为你想要的小字内容
+        left: 'left',
+        bottom: '2%',
+        textStyle: {
+          color: '#0', // 这里设置小字的颜色
+          fontSize: 12, // 这里设置小字的字体大小
+          fontWeight: 'normal', // 这里设置小字的字体粗细
+          fontStyle: 'normal' // 这里设置小字的字体样式
+        }
+      }
+    ],
+	toolbox: {
+      show: true,
+      //orient: 'vertical',
+      left: 'left',
+      top: 'top',
+      feature: {
+        dataView: { readOnly: false },
+        restore: {},
+        saveAsImage: {}
+      }
+    },
+	tooltip: {
+      trigger: 'item',
+      showDelay: 0,
+      transitionDuration: 0.2
+    },
+		  series: [
+			{
+			  name: 'GDP Per Capita (RMB)',
+			  id: 'population',
+			  type: 'map',
+			  roam: true,
+			  map: 'hubei',
+			  animationDurationUpdate: 1000,
+			  universalTransition: true,
+			  data: data,
+			  label: {
+					  show: true,
+					  color: '#333' // 可以根据需要调整文字颜色
+				  }
+			}
+		  ]
+		};
+		const barOption = {
+		  xAxis: {
+			type: 'value'
+		  },
+		  yAxis: {
+			type: 'category',
+			axisLabel: {
+			  rotate: 30
+			},
+			data: data.map(function (item) {
+			  return item.name;
+			})
+		  },
+		  animationDurationUpdate: 1000,
+		  series: {
+			type: 'bar',
+			id: 'population',
+			data: data.map(function (item) {
+			  return item.value;
+			}),
+			color: 'rgba(2, 25, 255, 0.5)',
+			universalTransition: true
+		  }
+		};
+		let currentOption = mapOption;
+		myChart.setOption(mapOption);
+	  
+		// 点击切换
+			// 添加地图和柱状图点击事件监听器
+			myChart.on('click', function (params) {
+			  if (params.seriesType === 'map') {
+				// 找到点击区域在数据中的索引
+				const clickedIndex = data.findIndex(item => item.name === params.name);
+				if (clickedIndex!== -1) {
+				  // 复制 barOption 的 series 数据
+				  const newBarData = barOption.series.data.map((value, index) => {
+					if (index === clickedIndex) {
+					  return { value, itemStyle: { color: 'yellow' } };
+					}
+					return { value };
+				  });
+				  // 更新 barOption 的 series 数据
+				  const newBarOption = {
+					...barOption,
+					series: {
+					  ...barOption.series,
+					  data: newBarData
+					}
+				  };
+				  currentOption = newBarOption;
+				}
+				myChart.setOption(currentOption, true);
+			  } else if (params.seriesType === 'bar') {
+				// 点击柱状图时恢复到地图视图
+				currentOption = mapOption;
+				myChart.setOption(currentOption, true);
+			  }
+			});
+	  });
+	  
+	  
+		  if (option && typeof option === 'object') {
+			myChart.setOption(option);
+		  }
+	  
+		  window.addEventListener('resize', myChart.resize);
+		</script>
+		</div>
+
+
+</div>
+
+<!-- Footer -->
+<footer id="footer">
+
+    <section class="split contact">
+        <section class="alt">
+            <h3>Address</h3>
+            <p>1234 Somewhere Road #87257<br />
+            Nashville, TN 00000-0000</p>
+        </section>
+        <section>
+            <h3>Phone</h3>
+            <p><a href="#">(000) 000-0000</a></p>
+        </section>
+        <section>
+            <h3>Email</h3>
+            <p><a href="#">info@untitled.tld</a></p>
+        </section>
+        <section>
+            <h3>Social</h3>
+            <ul class="icons alt">
+                <li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+            </ul>
+        </section>
+    </section>
+</footer>
+
+<!-- Copyright -->
+<div id="copyright">
+    <ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+</div>
+
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
